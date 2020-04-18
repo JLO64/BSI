@@ -1,0 +1,9 @@
+guiMode = True
+colorMode = True
+key1 = "na"
+key2 = "na"
+key3 = "na"
+version = "Origin"
+externalEditor = False
+aws_access_key_id = ""
+aws_secret_access_key = ""
