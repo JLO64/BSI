@@ -1,9 +1,4 @@
-import os, terminalColor, settingsJson
-try:
-    import boto3
-except:
-    os.system('pip3 install boto3')
-    import boto3
+import os, terminalColor, settingsJson, boto3
 
 def SetupNewComputer():
     terminalColor.printRedString("\nunable to connect to FATIMA")
@@ -12,10 +7,10 @@ def SetupNewComputer():
     os.system('sudo apt upgrade')
     toDownload = ["aptitude", "snap", "lynx", "vim"]
     for i in toDownload:
-        os.system('sudo apt install ' + i)
+        os.system('sudo apt install ' + i + " -y")
 
 if __name__ == "__main__":
-    print("SYSTEM BSI(Bash Script Installer)\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
+    print("BSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
     listOfOptions = ["Set up a new computer","Browse Database","Exit"]
 
