@@ -1,13 +1,21 @@
 import os, terminalColor, settingsJson, boto3
 
 def SetupNewComputer():
-    terminalColor.printRedString("\nunable to connect to FATIMA")
-    terminalColor.printGreenString("Initiallizing System-BSI")
+    terminalColor.printCyanString("Initializing System-BSI")
+    terminalColor.printRedString("\nunable to connect to BSI-Servers") #This is a placeholder for future internet features
+    
+    terminalColor.printCyanString("Upgrading software") #Upgrading sofware on computer via apt
     os.system('sudo apt update')
-    os.system('sudo apt upgrade')
-    toDownload = ["aptitude", "snap", "lynx", "vim"]
+    os.system('sudo apt upgrade -y')
+    os.system('sudo apt autoremove -y')
+    terminalColor.printGreenString("Software upgrading complete")
+
+    toDownload = ["aptitude", "snap", "lynx", "vim"]#Downloading sofware on computer via apt
     for i in toDownload:
+        terminalColor.printCyanString("Downloading: " + i )
         os.system('sudo apt install ' + i + " -y")
+
+    os.system('sudo reboot') #Reboots system to apply changes made
 
 if __name__ == "__main__":
     print("BSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
