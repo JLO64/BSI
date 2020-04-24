@@ -20,3 +20,4 @@ printf "${LIGHTBLUE}Cloning BSI-Manager files from GitHub${NC}\n"
 cd /usr/lib
 sudo rm -rf /usr/lib/BSI-Manager
 sudo git clone https://github.com/JLO64/BSI-Manager.git
+BSI_Manager
