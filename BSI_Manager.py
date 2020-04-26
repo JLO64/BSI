@@ -33,7 +33,15 @@ def BSISelector():
                     elif(userYesNo.lower() == "no") or (userYesNo.lower() == "n"):
                         print(listOfAllBSI[intDecision-1])
                         if(listOfAllBSI[intDecision-1] in listOfSelectedBSI): listOfSelectedBSI.remove(listOfAllBSI[intDecision-1])
-            elif( intDecision <= len(listOfCommands) ): print(listOfCommands[intDecision-1-len(listOfAllBSI)])
+            elif( intDecision <= len(listOfCommands) + len(listOfAllBSI) ):
+                commandSelection = intDecision-1-len(listOfAllBSI)
+                if( commandSelection == 0 ): #Install Selected
+                    for i in listOfSelectedBSI:
+                        exec(str(i.replace(" ","") + "()"))
+                elif( commandSelection == 1 ): #Reset Selection
+                    listOfSelectedBSI=["System BSI"]
+                elif( commandSelection == 2 ): #Cancel
+                    hasSelectedBSIs = True
         except:
             terminalColor.printRedString("Invalid Input")
 
@@ -62,7 +70,7 @@ def SystemBSI():
 if __name__ == "__main__":
     print("BSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
-    listOfOptions = ["Set up a new computer","Browse Database","Settings","Exit"]
+    listOfOptions = ["Set up a new computer","Settings","Exit"]
 
     while ( ( (intDecision < 1) or (intDecision > len(listOfOptions)) ) ):
             try:
@@ -72,7 +80,9 @@ if __name__ == "__main__":
                 intDecision = int(input())
                 if ( (intDecision < 1) or (intDecision > len(listOfOptions)) ): terminalColor.printRedString("Invalid Input")
                 elif ( listOfOptions[intDecision-1] == "Exit"): break #Exit program
-                elif ( listOfOptions[intDecision-1] == "Set up a new computer"): BSISelector()
+                elif ( listOfOptions[intDecision-1] == "Set up a new computer"):
+                    intDecision = 0   
+                    BSISelector()
                 else:
                     intDecision = 0    
             except:
