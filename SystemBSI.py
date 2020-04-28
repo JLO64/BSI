@@ -1,24 +1,30 @@
 import os, terminalColor, settingsJson
+from os import path
 
-toDownload = ["aptitude", "snap", "lynx", "vim", "blueman"]
+toDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman"]
 
 def SystemBSI():
     terminalColor.printCyanString("Initializing System-BSI")
-    terminalColor.printRedString("\nunable to connect to BSI-Servers") #This is a placeholder for future internet features
     
-    terminalColor.printCyanString("\nUpgrading software") #Upgrading sofware on computer via apt
+    #This is a placeholder for future internet features
+    terminalColor.printRedString("\nunable to connect to BSI-Servers")
+    
+    #Upgrading sofware on computer via apt
+    terminalColor.printCyanString("\nUpgrading software via apt") 
     os.system('sudo apt update')
     os.system('sudo apt upgrade -y')
     os.system('sudo apt autoremove -y')
 
     #Downloading sofware on computer via apt
-    for i in toDownload:
-        terminalColor.printCyanString("\nDownloading: " + i )
+    for i in toDownloadAPT:
+        terminalColor.printCyanString("\nInstalling: " + i )
         os.system('sudo apt install ' + i + " -y")
+
+    #Upgrading sofware on computer via snap
+    terminalColor.printCyanString("\nUpgrading software via snap")
+    os.system('sudo snap refresh')
 
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
-    os.system('sudo cp /usr/lib/BSI-Manager/System_Files/System-BSI_v1.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png')
-
-    terminalColor.printCyanString("\nPlease restart the computer to apply all changes made")
-    os.system('sleep 10s')
+    folderLocation = path.dirname(__file__)
+    os.system('sudo cp ' + folderLocation + '/System_Files/System-BSI_v1.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png')
