@@ -1,8 +1,10 @@
 import os, terminalColor, settingsJson, boto3
+import SystemBSI
 
 def BSISelector():
     listOfAllBSI = ["System BSI"]
-    listOfBSIComments = ["\nThis is the base BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else.\nInstalls: aptitude, snap, lynx, vim\nChanges: Wallpaper"]
+    listOfBSIComments = ["\nThis is the base BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else."]
+    listOfBSIChanges = ["\nChanges: Wallpaper"]
     listOfCommands = ["Install Selected", "Reset Selection", "Cancel"]
     listOfSelectedBSI=["System BSI"]
     intDecision = 0
@@ -20,20 +22,18 @@ def BSISelector():
             intDecision = int(input())
             #find out what what user wanted
             if ( (intDecision < 1) or (intDecision > (len(listOfOptions) + len(listOfAllBSI) + 1 ) ) ): terminalColor.printRedString("Invalid Input")
-            elif( intDecision <= len(listOfAllBSI) ):
+            elif( intDecision <= len(listOfAllBSI) ):#Has selected a BSI
                 #Display info on selected BSI
-                print("\n" + listOfAllBSI[intDecision-1] + listOfBSIComments[intDecision-1] )
+                print("\n" + listOfAllBSI[intDecision-1] + listOfBSIComments[intDecision-1] + "\nInstalls: " + ', '.join(eval( str(listOfAllBSI[intDecision-1]).replace(" ","") + ".toDownload" )) + listOfBSIChanges[intDecision-1] )
                 if not(listOfAllBSI[intDecision-1] == "System BSI"):
                     #Ask if wants to download BSI
                     print("\nDo You want to download this BSI?[Yes/No]")
                     userYesNo=str(input())
                     if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"):
-                        if( not (listOfAllBSI[intDecision-1] in listOfSelectedBSI)):
-                            listOfSelectedBSI.append(listOfAllBSI[intDecision-1])
+                        if( not (listOfAllBSI[intDecision-1] in listOfSelectedBSI)): listOfSelectedBSI.append(listOfAllBSI[intDecision-1])
                     elif(userYesNo.lower() == "no") or (userYesNo.lower() == "n"):
-                        print(listOfAllBSI[intDecision-1])
                         if(listOfAllBSI[intDecision-1] in listOfSelectedBSI): listOfSelectedBSI.remove(listOfAllBSI[intDecision-1])
-            elif( intDecision <= len(listOfCommands) + len(listOfAllBSI) ):
+            elif( intDecision <= len(listOfCommands) + len(listOfAllBSI) ):#Has selected a command
                 commandSelection = intDecision-1-len(listOfAllBSI)
                 if( commandSelection == 0 ): #Install Selected
                     for i in listOfSelectedBSI:
@@ -45,27 +45,26 @@ def BSISelector():
         except:
             terminalColor.printRedString("Invalid Input")
 
-def SystemBSI():
-    terminalColor.printCyanString("Initializing System-BSI")
-    terminalColor.printRedString("\nunable to connect to BSI-Servers") #This is a placeholder for future internet features
-    
-    terminalColor.printCyanString("\nUpgrading software") #Upgrading sofware on computer via apt
-    os.system('sudo apt update')
-    os.system('sudo apt upgrade -y')
-    os.system('sudo apt autoremove -y')
+def Settings():
+    intDecision = 0
+    settingsOptions = ["Update Software", "Cancel"]
 
-    toDownload = ["aptitude", "snap", "lynx", "vim"]#Downloading sofware on computer via apt
-    for i in toDownload:
-        terminalColor.printCyanString("\nDownloading: " + i )
-        os.system('sudo apt install ' + i + " -y")
-
-    #Changes wallpaper
-    terminalColor.printCyanString("\nChanging default wallpaper")
-    os.system('sudo cp /usr/lib/BSI-Manager/System_Files/System-BSI_v1.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png')
-
-    terminalColor.printCyanString("\nPlease restart the computer to apply all changes made")
-    os.system('sleep 10s')
-
+    while ( ( (intDecision < 1) or (intDecision > len(settingsOptions)) ) ):
+            try:
+                print("\nWhat do you want to do?")
+                for i in range( len(settingsOptions) ):
+                    terminalColor.printBlueString( str(i+1) + ". " + settingsOptions[i] )
+                intDecision = int(input())
+                if ( (intDecision < 1) or (intDecision > len(settingsOptions)) ): terminalColor.printRedString("Invalid Input")
+                elif ( settingsOptions[intDecision-1] == "Cancel"): break #Exit settings
+                elif ( settingsOptions[intDecision-1] == "Set up a new computer"):
+                    intDecision = 0   
+                    BSISelector()
+                else:
+                    intDecision = 0    
+            except:
+                intDecision = 0
+                terminalColor.printRedString("Invalid Input")
 
 if __name__ == "__main__":
     print("BSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
@@ -83,6 +82,9 @@ if __name__ == "__main__":
                 elif ( listOfOptions[intDecision-1] == "Set up a new computer"):
                     intDecision = 0   
                     BSISelector()
+                elif ( listOfOptions[intDecision-1] == "Settings"):
+                    intDecision = 0   
+                    Settings()
                 else:
                     intDecision = 0    
             except:
