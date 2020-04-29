@@ -86,7 +86,7 @@ def Settings():
                 elif ( settingsOptions[intDecision-1] == "Cancel"): break #Exit settings
                 elif ( settingsOptions[intDecision-1] == "Update Software"):
                     intDecision = 0   
-                    os.system( path.dirname(__file__) + '/BSI-Installer')
+                    os.system( path.dirname(__file__) + '/BSI-Installer.sh')
                     sys.exit()
                 else:
                     intDecision = 0    
