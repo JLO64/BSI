@@ -1,5 +1,9 @@
+#Made by Julian Lopez(JLO64)
 import os, terminalColor, settingsJson, boto3, sys
+from os import path
 import SystemBSI
+
+#https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip
 
 def BSISelector():
     #Initializing variables
@@ -82,16 +86,17 @@ def Settings():
                 elif ( settingsOptions[intDecision-1] == "Cancel"): break #Exit settings
                 elif ( settingsOptions[intDecision-1] == "Update Software"):
                     intDecision = 0   
-                    os.system('./BSI-Installer')
+                    os.system( path.dirname(__file__) + '/BSI-Installer')
                     sys.exit()
                 else:
                     intDecision = 0    
-            except:
+            except Exception as e:
+                if e == SystemExit: sys.exit()
                 intDecision = 0
                 terminalColor.printRedString("Invalid Input")
 
 if __name__ == "__main__":
-    print("BSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
+    print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
     listOfOptions = ["Set up a new computer","Settings","Exit"]
 
@@ -111,6 +116,7 @@ if __name__ == "__main__":
                     Settings()
                 else:
                     intDecision = 0    
-            except:
+            except Exception as e:
+                if e == SystemExit: sys.exit()
                 intDecision = 0
                 terminalColor.printRedString("Invalid Input")

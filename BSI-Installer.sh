@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /tmp
 LIGHTBLUE='\033[0;36m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
@@ -16,8 +17,9 @@ sudo chmod +x BSI_Manager
 sudo rm -rf /bin/BSI_Manager
 sudo mv BSI_Manager /bin/BSI_Manager
 
-printf "${LIGHTBLUE}Cloning BSI-Manager files from GitHub${NC}\n"
+printf "${LIGHTBLUE}Cloning latest BSI-Manager files from GitHub${NC}\n"
 cd /usr/lib
 sudo rm -rf /usr/lib/BSI-Manager
 sudo git clone https://github.com/JLO64/BSI-Manager.git
-BSI_Manager
+printf "\n${LIGHTBLUE}Run 'BSI_Manager' in the terminal to start the program${NC}"
+sleep 7s
