@@ -2,17 +2,36 @@
 import os, terminalColor, settingsJson, boto3, sys
 from os import path
 
-#https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip
-
-
 #
-#   All of the functions/variables related to installing configuring computers
+#   All of the functions/variables related to installing configuring computers (BSIs)
 #
 
+#System BSI Variables
 SystemBSItoDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman"]
+SystemBSItoDownloadSnap = []
+SystemBSItoDownloadAdditional = []
+SystemBSIComments = "This is the System BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else."
+SystemBSIChanges = "Changes: Wallpaper"
+
+#Game BSI Variables
+GameBSItoDownloadAPT = ["steam-launcher"]
+GameBSItoDownloadSnap = []
+GameBSItoDownloadAdditional = ["Powder Toy"]
+GameBSIComments = "This is the Game BSI. It contains many games and distractions for a person to please themselves with."
+GameBSIChanges = "Changes: None"
+
+#Wine BSI Variables
+#wine sudo apt install mono-complete
+#https://blog.dexterhaslem.com/getting-wine-3-0-working-on-ubuntu-18-04
+#https://forum.winehq.org/viewtopic.php?t=16162
+#play on linux
+WineBSItoDownloadAPT = ["wine"]
+WineBSItoDownloadSnap = []
+WineBSItoDownloadAdditional = []
+WineBSIComments = "This is the Wine BSI. Wine is a program that allows windows ."
+WineBSIChanges = "Changes: None"
 
 def SystemBSI():
-    terminalColor.printCyanString("Initializing System-BSI")
     
     #Upgrading sofware on computer via apt
     terminalColor.printCyanString("\nUpgrading software via apt") 
@@ -34,13 +53,26 @@ def SystemBSI():
     folderLocation = path.dirname(__file__)
     os.system('sudo cp ' + folderLocation + '/System_Files/System-BSI_v1.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png')
 
+def GameBSI():
+
+    #Downloading sofware on computer via apt
+    for i in GameBSItoDownloadAPT:
+        terminalColor.printCyanString("\nInstalling: " + i )
+        os.system('sudo apt install ' + i + " -y")
+
+    #Installing Powder Toy
+    os.system("cd ~/Downloads && wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("unzip PowderToy.zip -d PowderToy")
+    os.system("cd PowderToy && ./powder64")
+
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
     terminalColor.printRedString("\nunable to connect to BSI-Servers")
 
     #runs all BSIs in the list listOfSelectedBSI
     for i in listOfSelectedBSI:
-        exec(str(i.replace(" ","") + "()" ))
+        terminalColor.printCyanString("Initializing " + i +" BSI")
+        exec(str(i + "BSI()" ))
     
     #Reminds user to apply all changes
     terminalColor.printCyanString("\nPlease restart the computer to apply all changes made")
@@ -48,11 +80,9 @@ def downloadSelectedBSIs(listOfSelectedBSI):
 
 def BSISelector():
     #Initializing variables
-    listOfAllBSI = ["System BSI"]
-    listOfBSIComments = ["\nThis is the base BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else."]
-    listOfBSIChanges = ["\nChanges: Wallpaper"]
+    listOfAllBSI = ["System", "Game"]
     listOfCommands = ["Install Selected", "Reset Selection", "Cancel"]
-    listOfSelectedBSI=["System BSI"]
+    listOfSelectedBSI=["System"]
     intDecision = 0
     hasSelectedBSIs = False
 
@@ -61,10 +91,10 @@ def BSISelector():
             #Displays options for user to select
             print("\nWhat BSI(Bash Script Installer) packages do you want to install?")
             for i in range( len(listOfAllBSI) ):
-                if (listOfAllBSI[i] in listOfSelectedBSI ): terminalColor.printGreenRegString( str(i+1) + ". " + listOfAllBSI[i] )
-                else: terminalColor.printBlueString( str(i+1) + ". " + listOfAllBSI[i] )
+                if (listOfAllBSI[i] in listOfSelectedBSI ): terminalColor.printGreenRegString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )
+                else: terminalColor.printBlueString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )
             for i in range( len(listOfCommands) ):
-                terminalColor.printBlueString( str(i+1+len(listOfAllBSI) ) + ". " + listOfCommands[i] )
+                terminalColor.printBlueString( str(i+1+len(listOfAllBSI) ) + ". " + listOfCommands[i])
             
             #get user input
             intDecision = int(input())
@@ -74,11 +104,21 @@ def BSISelector():
             elif( intDecision <= len(listOfAllBSI) ):#Has selected a BSI
                 
                 #Display info on selected BSI
-                print("\n" + listOfAllBSI[intDecision-1] + listOfBSIComments[intDecision-1] + "\nInstalls: " + ', '.join(eval( str(listOfAllBSI[intDecision-1]).replace(" ","") + "toDownloadAPT" )) + listOfBSIChanges[intDecision-1] )
-                if not(listOfAllBSI[intDecision-1] == "System BSI"):
+                CurrentBSI = listOfAllBSI[intDecision-1] + "BSI"
+                print("\n" + listOfAllBSI[intDecision-1] + " BSI" ) #Name of BSI
+                print(eval( listOfAllBSI[intDecision-1] + "BSIComments" ) ) #BSI comments
+                CurrentBSIComments = "Installs: "
+                BSIDownloadSources = ["toDownloadAPT", "toDownloadSnap", "toDownloadAdditional"]
+                for i in BSIDownloadSources:
+                    currentDownloadList = eval( CurrentBSI + i) 
+                    if len(currentDownloadList) > 0 and CurrentBSIComments == "Installs: " : CurrentBSIComments = CurrentBSIComments + ', '.join(currentDownloadList)
+                    elif len(currentDownloadList) > 0: CurrentBSIComments = CurrentBSIComments + ", " + ', '.join(currentDownloadList)
+                print( CurrentBSIComments ) #BSI downloads
+                print(eval( listOfAllBSI[intDecision-1] + "BSIChanges" ) ) #BSI Changes
+                if not(listOfAllBSI[intDecision-1] == "System"):
                     
                     #Ask if wants to download BSI
-                    print("\nDo You want to download this BSI?[Yes/No]")
+                    print("\nDo You want to install this BSI onto this computer?[Yes/No]")
                     userYesNo=str(input())
                     if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"):
                         if( not (listOfAllBSI[intDecision-1] in listOfSelectedBSI)): listOfSelectedBSI.append(listOfAllBSI[intDecision-1])
@@ -93,7 +133,7 @@ def BSISelector():
                     hasSelectedBSIs = True
                 #Reset Selection
                 elif( commandSelection == 1 ):
-                    listOfSelectedBSI=["System BSI"]
+                    listOfSelectedBSI=["System"]
                 
                 #Cancel
                 elif( commandSelection == 2 ):
@@ -104,6 +144,7 @@ def BSISelector():
 #
 #   All of the functions related to application settings
 #
+
 def Settings():
     intDecision = 0
     settingsOptions = ["Update Software", "Cancel"]
@@ -134,6 +175,7 @@ def Settings():
 #
 #   The function that runs first when the program is run
 #
+
 if __name__ == "__main__":
     print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
