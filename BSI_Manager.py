@@ -49,12 +49,13 @@ def SystemBSI():
     terminalColor.printCyanString("\nUpgrading software via snap")
     os.system('sudo snap refresh')
 
+    terminalColor.printCyanString("\nInstalling Firefox extensions")
     #Installs Firefox Extensions
-    os.system('cd ~/Downloads')
-    os.system('mkdir BSI_Downloads')
-    os.system('cd ~/BSI_Downloads')
+    os.system('sudo cd ~/Downloads')
+    os.system('sudo mkdir BSI_Downloads')
+    os.system('sudo cd ~/BSI_Downloads')
     for i in SystemBSItoDownloadFireFoxExtensions:
-        os.system('wget ' + i)
+        os.system('sudo wget ' + i)
         print('firefox ' + i.split("/")[-1])
         os.system('firefox ' + i.split("/")[-1])
 
@@ -71,12 +72,12 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Installing Powder Toy
-    os.system('cd ~/Downloads')
-    os.system('mkdir BSI_Downloads')
-    os.system('cd ~/BSI_Downloads')
-    os.system("wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
-    os.system("unzip PowderToy.zip -d PowderToy")
-    os.system("cd PowderToy && ./powder64")
+    os.system('sudo cd ~/Downloads')
+    os.system('sudo mkdir BSI_Downloads')
+    os.system('sudo cd ~/BSI_Downloads')
+    os.system("sudo wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("sudo unzip PowderToy.zip -d PowderToy")
+    os.system("sudo cd PowderToy && ./powder64")
 
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
