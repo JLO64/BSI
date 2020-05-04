@@ -7,14 +7,15 @@ from os import path
 #
 
 #System BSI Variables
-SystemBSItoDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman"]
+SystemBSItoDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman", "vlc", "gparted", "htop"]
 SystemBSItoDownloadSnap = []
-SystemBSItoDownloadAdditional = []
+SystemBSItoDownloadFireFoxExtensions = ["https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-1.26.2-an+fx.xpi"]
+SystemBSItoDownloadAdditional = ["uBlock Origin"]
 SystemBSIComments = "This is the System BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else."
 SystemBSIChanges = "Changes: Wallpaper"
 
 #Game BSI Variables
-GameBSItoDownloadAPT = ["steam-launcher"]
+GameBSItoDownloadAPT = ["steam-installer", "SuperTuxKart", "gnome-chess", "gnome-mines", "aisleriot"]
 GameBSItoDownloadSnap = []
 GameBSItoDownloadAdditional = ["Powder Toy"]
 GameBSIComments = "This is the Game BSI. It contains many games and distractions for a person to please themselves with."
@@ -48,6 +49,15 @@ def SystemBSI():
     terminalColor.printCyanString("\nUpgrading software via snap")
     os.system('sudo snap refresh')
 
+    #Installs Firefox Extensions
+    os.system('cd ~/Downloads')
+    os.system('mkdir BSI_Downloads')
+    os.system('cd ~/BSI_Downloads')
+    for i in SystemBSItoDownloadFireFoxExtensions:
+        os.system('wget ' + i)
+        print('firefox ' + i.split("/")[-1])
+        os.system('firefox ' + i.split("/")[-1])
+
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
     folderLocation = path.dirname(__file__)
@@ -61,7 +71,10 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Installing Powder Toy
-    os.system("cd ~/Downloads && wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system('cd ~/Downloads')
+    os.system('mkdir BSI_Downloads')
+    os.system('cd ~/BSI_Downloads')
+    os.system("wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
     os.system("unzip PowderToy.zip -d PowderToy")
     os.system("cd PowderToy && ./powder64")
 
@@ -71,7 +84,7 @@ def downloadSelectedBSIs(listOfSelectedBSI):
 
     #runs all BSIs in the list listOfSelectedBSI
     for i in listOfSelectedBSI:
-        terminalColor.printCyanString("Initializing " + i +" BSI")
+        terminalColor.printGreenString("\nInitializing " + i +" BSI")
         exec(str(i + "BSI()" ))
     
     #Reminds user to apply all changes
