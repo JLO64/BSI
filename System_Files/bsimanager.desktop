@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=BSI-Manager
+Comment=Manages BSIs installed on system
+Categories=Utility;
+TryExec=BSI-Manager
+Exec=BSI-Manager
+Terminal=true
+Keywords=BSI;

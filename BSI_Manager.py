@@ -87,7 +87,10 @@ def WineBSI():
         os.system('sudo apt install ' + i + " -y")    
 
     #move the wine .desktop file
-    os.system("cp " + BSI_Directory + "/System_Files/wine.desktop ~/usr/share/applications")
+    os.system("sudo cp " + BSI_Directory + "/System_Files/wine.desktop /usr/share/applications")
+
+    #set wine as the default for .exe
+    os.system('sudo echo "application/x-ms-dos-executable=wine.desktop" >> /usr/share/applications/defaults.list ')
 
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
