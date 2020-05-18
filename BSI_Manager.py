@@ -40,7 +40,7 @@ def SystemBSI():
     os.system('sudo apt update')
     os.system('sudo apt upgrade -y')
     os.system('sudo apt autoremove -y')
-    os.system('/usr/bin/lubuntu-upgrader --full-upgrade')
+    os.system('sudo /usr/bin/lubuntu-upgrader --full-upgrade')
 
     #Downloading sofware on computer via apt
     for i in SystemBSItoDownloadAPT:
@@ -87,7 +87,7 @@ def WineBSI():
         os.system('sudo apt install ' + i + " -y")    
 
     #move the wine .desktop file
-    os.system("cp " + BSI_Directory + "/System_Files/userapp-wine-ERDHK0.desktop ~/.local/share/applications")
+    os.system("cp " + BSI_Directory + "/System_Files/wine.desktop ~/usr/share/applications")
 
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features

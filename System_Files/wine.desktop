@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Wine
+Comment=Runs windows .exe files
+Categories=Utility;
+TryExec=wine
+Exec=wine %F
+Icon=wine
+Keywords=wine;
+MimeType=application/x-ms-dos-executable;
