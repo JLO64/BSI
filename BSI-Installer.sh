@@ -21,6 +21,6 @@ printf "${LIGHTBLUE}Cloning latest BSI-Manager files from GitHub${NC}\n"
 cd /usr/lib
 sudo rm -rf /usr/lib/BSI-Manager
 sudo git clone https://github.com/JLO64/BSI-Manager.git
-cp /usr/lib/BSI-Manager/System_Files/bsimanager.desktop /usr/share/applications/bsimanager.desktop
+sudo cp /usr/lib/BSI-Manager/System_Files/bsimanager.desktop /usr/share/applications/bsimanager.desktop
 printf "\n${LIGHTBLUE}Run 'BSI_Manager' in the terminal to start the program${NC}"
-sleep 7s
+sleep 15s
