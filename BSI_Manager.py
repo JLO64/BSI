@@ -6,6 +6,8 @@ from os import path
 #   All of the functions/variables related to installing configuring computers (BSIs)
 #
 
+BSI_Directory = ""
+
 #System BSI Variables
 SystemBSItoDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman", "vlc", "gparted", "htop"]
 SystemBSItoDownloadSnap = []
@@ -15,22 +17,21 @@ SystemBSIComments = "This is the System BSI, it is automatically installed with 
 SystemBSIChanges = "Changes: Wallpaper"
 
 #Game BSI Variables
-GameBSItoDownloadAPT = ["steam-installer", "SuperTuxKart", "gnome-chess", "gnome-mines", "aisleriot"]
+GameBSItoDownloadAPT = ["steam-installer", "supertuxkart", "gnome-chess", "gnome-mines", "aisleriot"]
 GameBSItoDownloadSnap = []
 GameBSItoDownloadAdditional = ["Powder Toy"]
 GameBSIComments = "This is the Game BSI. It contains many games and distractions for a person to please themselves with."
 GameBSIChanges = "Changes: None"
 
 #Wine BSI Variables
-#wine sudo apt install mono-complete
 #https://blog.dexterhaslem.com/getting-wine-3-0-working-on-ubuntu-18-04
 #https://forum.winehq.org/viewtopic.php?t=16162
 #play on linux
-WineBSItoDownloadAPT = ["wine"]
+WineBSItoDownloadAPT = ["wine", "mono-complete"]
 WineBSItoDownloadSnap = []
 WineBSItoDownloadAdditional = []
-WineBSIComments = "This is the Wine BSI. Wine is a program that allows windows ."
-WineBSIChanges = "Changes: None"
+WineBSIComments = "This is the Wine BSI. Wine is a program that allows windows applications to be run on Linux systems."
+WineBSIChanges = "Changes: Opens Wine automatically whenever an exe file is opened."
 
 def SystemBSI():
     
@@ -72,12 +73,20 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Installing Powder Toy
-    os.system('sudo cd ~/Downloads')
-    os.system('sudo mkdir BSI_Downloads')
-    os.system('sudo cd ~/BSI_Downloads')
-    os.system("sudo wget -O PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
-    os.system("sudo unzip PowderToy.zip -d PowderToy")
-    os.system("sudo cd PowderToy && ./powder64")
+    os.system('sudo mkdir ~/Downloads/BSI_Downloads')
+    os.system("sudo wget -O ~/Downloads/BSI_Downloads/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("sudo unzip ~/Downloads/BSI_Downloads/PowderToy.zip -d ~/Downloads/BSI_Downloads/PowderToy")
+    os.system("~/Downloads/BSI_Downloads/powder64")
+
+def WineBSI():
+
+    #Downloading sofware on computer via apt
+    for i in WineBSItoDownloadAPT:
+        terminalColor.printCyanString("\nInstalling: " + i )
+        os.system('sudo apt install ' + i + " -y")    
+
+    #move the wine .desktop file
+    os.system("cp " + BSI_Directory + "/userapp-wine-ERDHK0.desktop ~/.local/share/applications")
 
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
@@ -191,6 +200,7 @@ def Settings():
 #
 
 if __name__ == "__main__":
+    BSI_Directory = os.path.dirname(os.path.realpath(__file__))
     print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
     listOfOptions = ["Set up a new computer","Settings","Exit"]
