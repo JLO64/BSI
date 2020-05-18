@@ -103,7 +103,7 @@ def downloadSelectedBSIs(listOfSelectedBSI):
 
 def BSISelector():
     #Initializing variables
-    listOfAllBSI = ["System", "Game"]
+    listOfAllBSI = ["System", "Game", "Wine"]
     listOfCommands = ["Install Selected", "Reset Selection", "Cancel"]
     listOfSelectedBSI=["System"]
     intDecision = 0
