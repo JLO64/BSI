@@ -53,13 +53,10 @@ def SystemBSI():
 
     terminalColor.printCyanString("\nInstalling Firefox extensions")
     #Installs Firefox Extensions
-    os.system('sudo cd ~/Downloads')
-    os.system('sudo mkdir BSI_Downloads')
-    os.system('sudo cd ~/BSI_Downloads')
+    os.system('sudo mkdir ~/Downloads/BSI_Downloads')
     for i in SystemBSItoDownloadFireFoxExtensions:
-        os.system('sudo wget ' + i)
-        print('firefox ' + i.split("/")[-1])
-        os.system('firefox ' + i.split("/")[-1])
+        os.system('sudo wget -P ~/Downloads/BSI_Downloads ' + i)
+        os.system('firefox ~/Downloads/BSI_Downloads/' + i.split("/")[-1])
 
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
@@ -90,7 +87,8 @@ def WineBSI():
     os.system("sudo cp " + BSI_Directory + "/System_Files/wine.desktop /usr/share/applications")
 
     #set wine as the default for .exe
-    os.system('sudo echo "application/x-ms-dos-executable=wine.desktop" >> /usr/share/applications/defaults.list ')
+    #os.system('sudo echo "application/x-ms-dos-executable=wine.desktop" >> /usr/share/applications/defaults.list ')
+    os.system('sudo bash -c "echo application/x-ms-dos-executable=wine.desktop >> /usr/share/applications/defaults.list"')
 
 def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
@@ -205,6 +203,12 @@ def Settings():
 
 if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
+    print("BBB    SSS  III")
+    print("B  B   S     I")
+    print("BBB    SSS   I")
+    print("B  B     S   I")
+    print("BBB    SSS  III")
+
     print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
     listOfOptions = ["Set up a new computer","Settings","Exit"]
