@@ -53,10 +53,9 @@ def SystemBSI():
 
     terminalColor.printCyanString("\nInstalling Firefox extensions")
     #Installs Firefox Extensions
-    os.system('sudo mkdir ~/Downloads/BSI_Downloads')
     for i in SystemBSItoDownloadFireFoxExtensions:
-        os.system('sudo wget -P ~/Downloads/BSI_Downloads ' + i)
-        os.system('firefox ~/Downloads/BSI_Downloads/' + i.split("/")[-1])
+        os.system('sudo wget -P /tmp/BSI_Manager ' + i)
+        os.system('firefox /tmp/BSI_Manager/' + i.split("/")[-1])
 
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
@@ -71,10 +70,9 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Installing Powder Toy
-    os.system('sudo mkdir ~/Downloads/BSI_Downloads')
-    os.system("sudo wget -O ~/Downloads/BSI_Downloads/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
-    os.system("sudo unzip ~/Downloads/BSI_Downloads/PowderToy.zip -d ~/Downloads/BSI_Downloads/PowderToy")
-    os.system("~/Downloads/BSI_Downloads/powder64")
+    os.system("sudo wget -O /tmp/BSI_Manager/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("sudo unzip /tmp/BSI_Manager/PowderToy.zip -d /tmp/BSI_Manager/PowderToy")
+    os.system("/tmp/BSI_Manager/powder64")
 
 def WineBSI():
 
@@ -207,6 +205,7 @@ def Settings():
 
 if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
+    os.system('mkdir /tmp/BSI_Manager')
     print("BBB   SSS  III")
     print("B  B  S     I")
     print("BBB   SSS   I")
