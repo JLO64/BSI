@@ -154,8 +154,12 @@ def BSISelector():
 
                 #Install Selected BSIs
                 if( commandSelection == 0 ):
-                    downloadSelectedBSIs(listOfSelectedBSI)
-                    hasSelectedBSIs = True
+                    print("\nDo You want to install these BSIs onto this computer?[Yes/No]")
+                    for i in listOfSelectedBSI: terminalColor.printGreenString(i)
+                    userYesNo=str(input())
+                    if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"):
+                        downloadSelectedBSIs(listOfSelectedBSI)
+                        hasSelectedBSIs = True
                 #Reset Selection
                 elif( commandSelection == 1 ):
                     listOfSelectedBSI=["System"]
@@ -203,11 +207,11 @@ def Settings():
 
 if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
-    print("BBB    SSS  III")
-    print("B  B   S     I")
-    print("BBB    SSS   I")
-    print("B  B     S   I")
-    print("BBB    SSS  III")
+    print("BBB   SSS  III")
+    print("B  B  S     I")
+    print("BBB   SSS   I")
+    print("B  B    S   I")
+    print("BBB   SSS  III")
 
     print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
     intDecision = 0
