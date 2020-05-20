@@ -11,7 +11,7 @@ BSI_Directory = ""
 #System BSI Variables
 SystemBSItoDownloadAPT = ["aptitude", "snap", "lynx", "vim", "blueman", "vlc", "gparted", "htop"]
 SystemBSItoDownloadSnap = []
-SystemBSItoDownloadFireFoxExtensions = ["https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-1.26.2-an+fx.xpi"]
+SystemBSItoDownloadFireFoxExtensions = ["https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-1.26.2-an+fx.xpi", "https://addons.mozilla.org/firefox/downloads/file/3548609/firefox_multi_account_containers-6.2.5-fx.xpi"]
 SystemBSItoDownloadAdditional = ["uBlock Origin"]
 SystemBSIComments = "This is the System BSI, it is automatically installed with all other BSIs. It includes some helpful tools but nothing else."
 SystemBSIChanges = "Changes: Wallpaper"
@@ -24,10 +24,7 @@ GameBSIComments = "This is the Game BSI. It contains many games and distractions
 GameBSIChanges = "Changes: None"
 
 #Wine BSI Variables
-#https://blog.dexterhaslem.com/getting-wine-3-0-working-on-ubuntu-18-04
-#https://forum.winehq.org/viewtopic.php?t=16162
-#play on linux
-WineBSItoDownloadAPT = ["wine", "mono-complete"]
+WineBSItoDownloadAPT = ["wine", "mono-complete", "playonlinux"]
 WineBSItoDownloadSnap = []
 WineBSItoDownloadAdditional = []
 WineBSIComments = "This is the Wine BSI. Wine is a program that allows windows applications to be run on Linux systems."
@@ -87,6 +84,11 @@ def WineBSI():
     for i in WineBSItoDownloadAPT:
         terminalColor.printCyanString("\nInstalling: " + i )
         os.system('sudo apt install ' + i + " -y")    
+
+    #download gecko dependencies
+    os.system("sudo mdkir /usr/share/wine/gecko")
+    os.system('sudo wget -P /usr/share/wine/gecko http://dl.winehq.org/wine/wine-gecko/2.47.1/wine-gecko-2.47.1-x86.msi')
+    os.system('sudo wget -P /usr/share/wine/gecko http://dl.winehq.org/wine/wine-gecko/2.47.1/wine-gecko-2.47.1-x86_64.msi')
 
     #move the wine .desktop file
     os.system("sudo cp " + BSI_Directory + "/System_Files/wine.desktop /usr/share/applications")
