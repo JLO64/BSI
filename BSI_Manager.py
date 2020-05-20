@@ -69,10 +69,17 @@ def GameBSI():
         terminalColor.printCyanString("\nInstalling: " + i )
         os.system('sudo apt install ' + i + " -y")
 
-    #Installing Powder Toy
-    os.system("sudo wget -O /tmp/BSI_Manager/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
-    os.system("sudo unzip /tmp/BSI_Manager/PowderToy.zip -d /tmp/BSI_Manager/PowderToy")
-    os.system("/tmp/BSI_Manager/powder64")
+    #Downloading Installing Powder Toy
+    os.system('mkdir /usr/lib/PowderToy')
+    os.system("sudo wget -O /usr/lib/PowderToy/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("sudo unzip /usr/lib/PowderToy/PowderToy.zip -d /usr/lib/PowderToy/PowderToy")
+    os.system("/usr/lib/PowderToy/powder64")
+
+    #move Powder Toy desktop file
+    os.system("cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/applications" )
+    
+    #move Powder Toy icon
+    os.system("cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/icons/hicolor/48x48/apps/powdertoy.png" )
 
 def WineBSI():
 

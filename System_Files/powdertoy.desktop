@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=Powder Toy
+Type=Application
+Comment=Physics sandbox game
+Categories=Game;Simulation
+Icon=/usr/share/icons/hicolor/48x48/apps/powdertoy.png
+Exec=/usr/lib/PowderToy/powder64
