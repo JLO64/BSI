@@ -70,16 +70,16 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Downloading Installing Powder Toy
-    os.system('mkdir /usr/lib/PowderToy')
+    os.system('sudo mkdir /usr/lib/PowderToy')
     os.system("sudo wget -O /usr/lib/PowderToy/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
     os.system("sudo unzip /usr/lib/PowderToy/PowderToy.zip -d /usr/lib/PowderToy/PowderToy")
     os.system("/usr/lib/PowderToy/powder64")
 
     #move Powder Toy desktop file
-    os.system("cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/applications" )
+    os.system("sudo cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/applications" )
     
     #move Powder Toy icon
-    os.system("cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/icons/hicolor/48x48/apps/powdertoy.png" )
+    os.system("sudo cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/icons/hicolor/48x48/apps/powdertoy.png" )
 
 def WineBSI():
 
@@ -160,7 +160,7 @@ def BSISelector():
                 #Install Selected BSIs
                 if( commandSelection == 0 ):
                     print("\nDo You want to install these BSIs onto this computer?[Yes/No]")
-                    for i in listOfSelectedBSI: terminalColor.printGreenString(i)
+                    for i in listOfSelectedBSI: terminalColor.printGreenRegString(i + " BSI")
                     userYesNo=str(input())
                     if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"):
                         downloadSelectedBSIs(listOfSelectedBSI)
