@@ -55,7 +55,7 @@ def SystemBSI():
     #Installs Firefox Extensions
     for i in SystemBSItoDownloadFireFoxExtensions:
         os.system('sudo wget -P /tmp/BSI_Manager ' + i)
-        os.system('firefox /tmp/BSI_Manager/' + i.split("/")[-1])
+        os.system('timeout 15s firefox /tmp/BSI_Manager/' + i.split("/")[-1])
 
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
@@ -70,10 +70,10 @@ def GameBSI():
         os.system('sudo apt install ' + i + " -y")
 
     #Downloading Installing Powder Toy
-    os.system('sudo mkdir /usr/lib/PowderToy')
-    os.system("sudo wget -O /usr/lib/PowderToy/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
-    os.system("sudo unzip /usr/lib/PowderToy/PowderToy.zip -d /usr/lib/PowderToy/PowderToy")
-    os.system("/usr/lib/PowderToy/powder64")
+    #os.system('sudo mkdir /usr/lib/PowderToy')
+    os.system("sudo wget -O /tmp/BSI_Manager/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
+    os.system("sudo unzip /tmp/BSI_Manager/PowderToy.zip -d /usr/lib/PowderToy")
+    os.system("timeout 1s /usr/lib/PowderToy/powder64")
 
     #move Powder Toy desktop file
     os.system("sudo cp " + BSI_Directory + "/System_Files/powdertoy.desktop /usr/share/applications" )
@@ -92,7 +92,6 @@ def WineBSI():
     os.system("sudo cp " + BSI_Directory + "/System_Files/wine.desktop /usr/share/applications")
 
     #set wine as the default for .exe
-    #os.system('sudo echo "application/x-ms-dos-executable=wine.desktop" >> /usr/share/applications/defaults.list ')
     os.system('sudo bash -c "echo application/x-ms-dos-executable=wine.desktop >> /usr/share/applications/defaults.list"')
 
 def downloadSelectedBSIs(listOfSelectedBSI):
