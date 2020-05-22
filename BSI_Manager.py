@@ -1,5 +1,5 @@
 #Made by Julian Lopez(JLO64)
-import os, terminalColor, settingsJson, boto3, sys, json
+import os, terminalColor, settingsJson, boto3, sys, json, datetime
 from os import path
 
 #
@@ -52,7 +52,8 @@ def SystemBSI():
     #Installs Firefox Extensions
     for i in SystemBSItoDownloadFireFoxExtensions:
         os.system('sudo wget -P /tmp/BSI_Manager ' + i)
-        os.system('timeout 15s firefox /tmp/BSI_Manager/' + i.split("/")[-1])
+        #os.system('timeout 15s firefox /tmp/BSI_Manager/' + i.split("/")[-1])
+        os.system('firefox /tmp/BSI_Manager/' + i.split("/")[-1])
 
     #Changes wallpaper
     terminalColor.printCyanString("\nChanging default wallpaper")
@@ -219,13 +220,14 @@ def writeInstalledBSIs(selectedBSIs):
     data = {}
     #data["GUImode"] = settingsJson.guiMode
     data["installedBSIVersion"] = settingsJson.version
-    data["installedBSIVersion"] = selectedBSIs
-    with open( "~/.config/BSI_Manager/computerInfo", 'w') as outfile:
+    data["installedBSIs"] = selectedBSIs
+    data["dateOfInstall"] = datetime.date.today()
+    with open(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo", 'w') as outfile:
         json.dump(data, outfile)
 
 def readInstalledBSIs():
-    if checkForFile("~/.config/BSI_Manager/computerInfo"):
-        with open("~/.config/BSI_Manager/computerInfo") as json_file:
+    if checkForFile(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo"):
+        with open(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo") as json_file:
             data = json.load(json_file)
             return data
     else:
