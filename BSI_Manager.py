@@ -1,5 +1,5 @@
 #Made by Julian Lopez(JLO64)
-import os, terminalColor, settingsJson, boto3, sys
+import os, terminalColor, settingsJson, boto3, sys, json
 from os import path
 
 #
@@ -100,13 +100,15 @@ def downloadSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
     terminalColor.printRedString("\nunable to connect to BSI-Servers")
 
+    writeInstalledBSIs(listOfSelectedBSI)
+
     #runs all BSIs in the list listOfSelectedBSI
     for i in listOfSelectedBSI:
         terminalColor.printGreenString("\nInitializing " + i +" BSI")
         exec(str(i + "BSI()" ))
     
     #Reminds user to apply all changes
-    terminalColor.printCyanString("\nPlease restart the computer to apply all changes made")
+    terminalColor.printRedString("\nPlease restart the computer to apply all changes made")
     os.system('sleep 5s')
 
 def BSISelector():
@@ -207,20 +209,47 @@ def Settings():
                 intDecision = 0
                 terminalColor.printRedString("Invalid Input")
 
-#
+def checkForDirectory(programPath): #checks for "programPath" directory and creates it if not found
+    if not os.path.exists(programPath):
+        os.makedirs(programPath)
+    return programPath
+
+def writeInstalledBSIs(selectedBSIs):
+    checkForDirectory( "~/.config/BSI_Manager" )
+    data = {}
+    #data["GUImode"] = settingsJson.guiMode
+    data["installedBSIVersion"] = settingsJson.version
+    data["installedBSIVersion"] = selectedBSIs
+    with open( "~/.config/BSI_Manager/computerInfo", 'w') as outfile:
+        json.dump(data, outfile)
+
+def readInstalledBSIs():
+    if checkForFile("~/.config/BSI_Manager/computerInfo"):
+        with open("~/.config/BSI_Manager/computerInfo") as json_file:
+            data = json.load(json_file)
+            return data
+    else:
+        return {}
+
+def checkForFile(filePath): #checks for "filePath" file and returns boolean
+    if os.path.exists(filePath):
+        return True
+    else: return False
+
+    #
 #   The function that runs first when the program is run
 #
 
 if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
-    os.system('mkdir /tmp/BSI_Manager')
+    checkForDirectory('mkdir /tmp/BSI_Manager')
     print("BBB   SSS  III")
     print("B  B  S     I")
     print("BBB   SSS   I")
     print("B  B    S   I")
     print("BBB   SSS  III")
 
-    print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + settingsJson.version)
+    print("\nBSI(Bash Script Installer) Manager\nMade By: Julian Lopez\nVersion: " + str(settingsJson.version) + settingsJson.versionName )
     intDecision = 0
     listOfOptions = ["Set up a new computer","Settings","Exit"]
 
