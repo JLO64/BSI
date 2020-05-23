@@ -116,7 +116,8 @@ def BSISelector():
     #Initializing variables
     listOfAllBSI = ["System", "Game", "Wine"]
     listOfCommands = ["Install Selected", "Reset Selection", "Cancel"]
-    listOfSelectedBSI=["System"]
+    if "System" in settingsJson.installedBSIs: listOfSelectedBSI=[]
+    else: listOfSelectedBSI=["System"]
     intDecision = 0
     hasSelectedBSIs = False
 
@@ -125,7 +126,8 @@ def BSISelector():
             #Displays options for user to select
             print("\nWhat BSI(Bash Script Installer) packages do you want to install?")
             for i in range( len(listOfAllBSI) ):
-                if (listOfAllBSI[i] in listOfSelectedBSI ): terminalColor.printGreenRegString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )
+                if (listOfAllBSI[i] in settingsJson.installedBSIs ): terminalColor.printYellowString( str(i+1) + ". " + listOfAllBSI[i] + " BSI(v" + str(settingsJson.installedBSIVersions[i]) + " already installed)" )
+                elif (listOfAllBSI[i] in listOfSelectedBSI ): terminalColor.printGreenRegString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )                
                 else: terminalColor.printBlueString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )
             for i in range( len(listOfCommands) ):
                 terminalColor.printBlueString( str(i+1+len(listOfAllBSI) ) + ". " + listOfCommands[i])
@@ -149,7 +151,7 @@ def BSISelector():
                     elif len(currentDownloadList) > 0: CurrentBSIComments = CurrentBSIComments + ", " + ', '.join(currentDownloadList)
                 print( CurrentBSIComments ) #BSI downloads
                 print(eval( listOfAllBSI[intDecision-1] + "BSIChanges" ) ) #BSI Changes
-                if not(listOfAllBSI[intDecision-1] == "System"):
+                if not(listOfAllBSI[intDecision-1] == "System") and not(listOfAllBSI[intDecision-1] in settingsJson.installedBSIs) :
                     
                     #Ask if wants to download BSI
                     print("\nDo You want to install this BSI onto this computer?[Yes/No]")
@@ -212,22 +214,32 @@ def Settings():
 
 def checkForDirectory(programPath): #checks for "programPath" directory and creates it if not found
     if not os.path.exists(programPath):
-        os.makedirs(programPath)
+        os.system('mkdir ' + programPath)
     return programPath
 
 def writeInstalledBSIs(selectedBSIs):
-    checkForDirectory( "~/.config/BSI_Manager" )
+    checkForDirectory(os.path.expanduser('~') + "/.BSI" )
+    for i in selectedBSIs:
+        settingsJson.installedBSIs.append(i)
+        settingsJson.installedBSIVersions.append(settingsJson.version)
     data = {}
-    #data["GUImode"] = settingsJson.guiMode
-    data["installedBSIVersion"] = settingsJson.version
-    data["installedBSIs"] = selectedBSIs
-    data["dateOfInstall"] = datetime.date.today()
-    with open(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo", 'w') as outfile:
+    data["installedBSIs"] = settingsJson.installedBSIs
+    data["installedBSIVersions"] = settingsJson.installedBSIVersions
+    #data["datesOfInstalls"] = datetime.date.today()
+    with open(os.path.expanduser('~') + "/.BSI/computerInfo", 'w') as outfile:
         json.dump(data, outfile)
 
 def readInstalledBSIs():
-    if checkForFile(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo"):
-        with open(os.path.expanduser('~') + "/.config/BSI_Manager/computerInfo") as json_file:
+    if checkForFile(os.path.expanduser('~') + "/.BSI/computerInfo"):
+        BSIjsonData = readJSONFile(os.path.expanduser('~') + "/.BSI/computerInfo")
+        settingsJson.installedBSIs = BSIjsonData["installedBSIs"]
+        settingsJson.installedBSIVersions = BSIjsonData["installedBSIVersions"]
+    else:
+        pass
+
+def readJSONFile(fileLoc):
+    if checkForFile(fileLoc):
+        with open(fileLoc) as json_file:
             data = json.load(json_file)
             return data
     else:
@@ -245,6 +257,8 @@ def checkForFile(filePath): #checks for "filePath" file and returns boolean
 if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
     checkForDirectory('mkdir /tmp/BSI_Manager')
+    readInstalledBSIs()
+
     print("BBB   SSS  III")
     print("B  B  S     I")
     print("BBB   SSS   I")
