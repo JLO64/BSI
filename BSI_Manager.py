@@ -187,7 +187,7 @@ def BSISelector():
 
 def Settings():
     intDecision = 0
-    settingsOptions = ["Update Software", "Cancel"]
+    settingsOptions = ["Update Software", "Change Color Mode", "Cancel"]
 
     while ( ( (intDecision < 1) or (intDecision > len(settingsOptions)) ) ):
             try:
@@ -201,12 +201,23 @@ def Settings():
 
                 if ( (intDecision < 1) or (intDecision > len(settingsOptions)) ): terminalColor.printRedString("Invalid Input")
                 elif ( settingsOptions[intDecision-1] == "Cancel"): break #Exit settings
+                elif ( settingsOptions[intDecision-1] == "Change Color Mode"):
+                    intDecision = 0
+                    if settingsJson.colorMode:
+                        print("\nCurrently Color Mode is ON\nDo you want to turn it off?[Yes/No]")
+                        userYesNo=str(input())
+                        if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = False
+                    else:
+                        print("\nCurrently Color Mode is OFF\nDo you want to turn it on?[Yes/No]")
+                        userYesNo=str(input())
+                        if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = True
                 elif ( settingsOptions[intDecision-1] == "Update BSI-Manager"):
                     intDecision = 0   
                     os.system( path.dirname(__file__) + '/BSI-Installer.sh')
                     sys.exit()
                 else:
                     intDecision = 0    
+                writeSettings()
             except Exception as e:
                 if e == SystemExit: sys.exit()
                 intDecision = 0
@@ -226,8 +237,12 @@ def writeInstalledBSIs(selectedBSIs):
     data["installedBSIs"] = settingsJson.installedBSIs
     data["installedBSIVersions"] = settingsJson.installedBSIVersions
     #data["datesOfInstalls"] = datetime.date.today()
-    with open(os.path.expanduser('~') + "/.BSI/computerInfo", 'w') as outfile:
-        json.dump(data, outfile)
+    writeJSONFile(data, os.path.expanduser('~') + "/.BSI/computerInfo")
+
+def checkForFile(filePath): #checks for "filePath" file and returns boolean
+    if os.path.exists(filePath):
+        return True
+    else: return False
 
 def readInstalledBSIs():
     if checkForFile(os.path.expanduser('~') + "/.BSI/computerInfo"):
@@ -245,10 +260,20 @@ def readJSONFile(fileLoc):
     else:
         return {}
 
-def checkForFile(filePath): #checks for "filePath" file and returns boolean
-    if os.path.exists(filePath):
-        return True
-    else: return False
+def writeJSONFile(data, filePath):
+    with open(filePath, 'w') as outfile:
+        json.dump(data, outfile)
+
+def initializeSettings():
+    if checkForFile(os.path.expanduser('~') + "/.BSI/settings"):
+        settingsFile = readJSONFile(os.path.expanduser('~') + "/.BSI/settings")
+        settingsJson.colorMode = settingsFile["colorMode"]
+    else: pass
+
+def writeSettings():
+    data = {}
+    data["colorMode"] = settingsJson.colorMode
+    writeJSONFile(data, os.path.expanduser('~') + "/.BSI/settings")
 
     #
 #   The function that runs first when the program is run
@@ -258,6 +283,7 @@ if __name__ == "__main__":
     BSI_Directory = os.path.dirname(os.path.realpath(__file__))
     checkForDirectory('mkdir /tmp/BSI_Manager')
     readInstalledBSIs()
+    initializeSettings()
 
     print("BBB   SSS  III")
     print("B  B  S     I")
