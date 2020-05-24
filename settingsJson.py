@@ -5,6 +5,7 @@ installedBSIs = []
 installedBSIVersions = []
 datesOfInstalls = []
 colorMode = True
+dummyBSIInstall = False
 
 
 key1 = "na"

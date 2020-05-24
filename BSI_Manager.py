@@ -97,16 +97,17 @@ def WineBSI():
     #set wine as the default for .exe
     os.system('sudo bash -c "echo application/x-ms-dos-executable=wine.desktop >> /usr/share/applications/defaults.list"')
 
-def downloadSelectedBSIs(listOfSelectedBSI):
+def installSelectedBSIs(listOfSelectedBSI):
     #This is a placeholder for future internet features
     terminalColor.printRedString("\nunable to connect to BSI-Servers")
 
     writeInstalledBSIs(listOfSelectedBSI)
 
     #runs all BSIs in the list listOfSelectedBSI
-    for i in listOfSelectedBSI:
-        terminalColor.printGreenString("\nInitializing " + i +" BSI")
-        exec(str(i + "BSI()" ))
+    if not settingsJson.dummyBSIInstall:
+        for i in listOfSelectedBSI:
+            terminalColor.printGreenString("\nInitializing " + i +" BSI")
+            exec(str(i + "BSI()" ))
     
     #Reminds user to apply all changes
     terminalColor.printRedString("\nPlease restart the computer to apply all changes made")
@@ -125,8 +126,9 @@ def BSISelector():
         try:
             #Displays options for user to select
             print("\nWhat BSI(Bash Script Installer) packages do you want to install?")
+            if settingsJson.dummyBSIInstall: terminalColor.printRedString("Dummy Install Mode is Active")
             for i in range( len(listOfAllBSI) ):
-                if (listOfAllBSI[i] in settingsJson.installedBSIs ): terminalColor.printYellowString( str(i+1) + ". " + listOfAllBSI[i] + " BSI(v" + str(settingsJson.installedBSIVersions[i]) + " already installed)" )
+                if (listOfAllBSI[i] in settingsJson.installedBSIs ): terminalColor.printYellowString( str(i+1) + ". " + listOfAllBSI[i] + " BSI(v" + str(settingsJson.installedBSIVersions[i]) + " already installed on " + str(settingsJson.datesOfInstalls[i]) + ")" )
                 elif (listOfAllBSI[i] in listOfSelectedBSI ): terminalColor.printGreenRegString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )                
                 else: terminalColor.printBlueString( str(i+1) + ". " + listOfAllBSI[i] + " BSI" )
             for i in range( len(listOfCommands) ):
@@ -169,7 +171,7 @@ def BSISelector():
                     for i in listOfSelectedBSI: terminalColor.printGreenRegString(i + " BSI")
                     userYesNo=str(input())
                     if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"):
-                        downloadSelectedBSIs(listOfSelectedBSI)
+                        installSelectedBSIs(listOfSelectedBSI)
                         hasSelectedBSIs = True
                 #Reset Selection
                 elif( commandSelection == 1 ):
@@ -187,7 +189,7 @@ def BSISelector():
 
 def Settings():
     intDecision = 0
-    settingsOptions = ["Update Software", "Change Color Mode", "Cancel"]
+    settingsOptions = ["Update Software", "Change Color Mode", "Developer Options", "Main Menu"]
 
     while ( ( (intDecision < 1) or (intDecision > len(settingsOptions)) ) ):
             try:
@@ -200,7 +202,7 @@ def Settings():
                 intDecision = int(input())
 
                 if ( (intDecision < 1) or (intDecision > len(settingsOptions)) ): terminalColor.printRedString("Invalid Input")
-                elif ( settingsOptions[intDecision-1] == "Cancel"): break #Exit settings
+                elif ( settingsOptions[intDecision-1] == "Main Menu"): writeSettings() #Exit settings
                 elif ( settingsOptions[intDecision-1] == "Change Color Mode"):
                     intDecision = 0
                     if settingsJson.colorMode:
@@ -215,11 +217,47 @@ def Settings():
                     intDecision = 0   
                     os.system( path.dirname(__file__) + '/BSI-Installer.sh')
                     sys.exit()
+                elif ( settingsOptions[intDecision-1] == "Developer Options"):
+                    intDecision = 0   
+                    developerOptions()
                 else:
                     intDecision = 0    
-                writeSettings()
             except Exception as e:
                 if e == SystemExit: sys.exit()
+                intDecision = 0
+                terminalColor.printRedString("Invalid Input")
+
+def developerOptions():
+    intDecision = 0
+    devSettingsOptions = ["Dummy BSI Install Mode", "Exit"]
+
+    while ( ( (intDecision < 1) or (intDecision > len(devSettingsOptions)) ) ):
+            try:
+                #Display options
+                terminalColor.printRedString("\nWarning: these settings are not meant for regular users, they are mostly for testing purposes")
+                print("What do you want to do?")
+                for i in range( len(devSettingsOptions) ):
+                    terminalColor.printBlueString( str(i+1) + ". " + devSettingsOptions[i] )
+                
+                #get user input
+                intDecision = int(input())
+
+                if ( (intDecision < 1) or (intDecision > len(devSettingsOptions)) ): terminalColor.printRedString("Invalid Input")
+                elif ( devSettingsOptions[intDecision-1] == "Exit"): pass
+                elif ( devSettingsOptions[intDecision-1] == "Dummy BSI Install Mode"):
+                    intDecision = 0   
+                    terminalColor.printRedString("if enabled when installing a BSI nothing is downloaded/installed")
+                    if settingsJson.dummyBSIInstall:
+                        print("Currently this option is ENABLED. Do you want to disable it?[Yes/No]")
+                        userYesNo=str(input())
+                        if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.dummyBSIInstall = False
+                    else: 
+                        print("Currently this option is DISABLED. Do you want to enable it?[Yes/No]")
+                        userYesNo=str(input())
+                        if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.dummyBSIInstall = True
+                else:
+                    intDecision = 0
+            except:
                 intDecision = 0
                 terminalColor.printRedString("Invalid Input")
 
@@ -233,10 +271,11 @@ def writeInstalledBSIs(selectedBSIs):
     for i in selectedBSIs:
         settingsJson.installedBSIs.append(i)
         settingsJson.installedBSIVersions.append(settingsJson.version)
+        settingsJson.datesOfInstalls.append(str(datetime.date.today()) )
     data = {}
     data["installedBSIs"] = settingsJson.installedBSIs
     data["installedBSIVersions"] = settingsJson.installedBSIVersions
-    #data["datesOfInstalls"] = datetime.date.today()
+    data["datesOfInstalls"] = settingsJson.datesOfInstalls
     writeJSONFile(data, os.path.expanduser('~') + "/.BSI/computerInfo")
 
 def checkForFile(filePath): #checks for "filePath" file and returns boolean
@@ -249,6 +288,7 @@ def readInstalledBSIs():
         BSIjsonData = readJSONFile(os.path.expanduser('~') + "/.BSI/computerInfo")
         settingsJson.installedBSIs = BSIjsonData["installedBSIs"]
         settingsJson.installedBSIVersions = BSIjsonData["installedBSIVersions"]
+        settingsJson.datesOfInstalls = BSIjsonData["datesOfInstalls"]
     else:
         pass
 
@@ -268,11 +308,13 @@ def initializeSettings():
     if checkForFile(os.path.expanduser('~') + "/.BSI/settings"):
         settingsFile = readJSONFile(os.path.expanduser('~') + "/.BSI/settings")
         settingsJson.colorMode = settingsFile["colorMode"]
+        settingsJson.dummyBSIInstall = settingsFile["dummyBSIInstall"]
     else: pass
 
 def writeSettings():
     data = {}
     data["colorMode"] = settingsJson.colorMode
+    data["dummyBSIInstall"] = settingsJson.dummyBSIInstall
     writeJSONFile(data, os.path.expanduser('~') + "/.BSI/settings")
 
     #
