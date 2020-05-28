@@ -17,8 +17,8 @@ SystemBSIComments = "This is the System BSI, it is automatically installed with 
 SystemBSIChanges = "Changes: Wallpaper"
 
 #Game BSI Variables
-GameBSItoDownloadAPT = ["steam-installer", "supertuxkart", "gnome-chess", "gnome-mines", "aisleriot"]
-GameBSItoDownloadSnap = []
+GameBSItoDownloadAPT = ["steam-installer", "supertuxkart", "gnome-chess", "gnome-mines", "aisleriot", "lutris"]
+GameBSItoDownloadSnap = ["openra"]
 GameBSItoDownloadAdditional = ["Powder Toy"]
 GameBSIComments = "This is the Game BSI. It contains many games and distractions for a person to kill time with."
 GameBSIChanges = "Changes: None"
@@ -74,6 +74,11 @@ def GameBSI():
 		terminalColor.printCyanString("\nInstalling: " + i )
 		os.system('sudo apt install ' + i + " -y")
 
+	#Downloading sofware on computer via snap
+	for i in GameBSItoDownloadSnap:
+		terminalColor.printCyanString("\nInstalling: " + i )
+		os.system('sudo snap install ' + i)
+
 	#Downloading Installing Powder Toy
 	#os.system('sudo mkdir /usr/lib/PowderToy')
 	os.system("sudo wget -O /tmp/BSI_Manager/PowderToy.zip https://starcatcher.us/TPT/Download/Snapshot%20linux64.zip ")
@@ -112,7 +117,7 @@ def OfficeBSI():
 		os.system('sudo apt install ' + i + " -y")    
 
 	#moves template files into template folder
-	os.system("sudo cp " + BSI_Directory + "*.od* " + os.path.expanduser('~') + "/Templates/")
+	os.system("sudo cp " + BSI_Directory + "/*.od* " + os.path.expanduser('~') + "/Templates/")
 
 def installSelectedBSIs(listOfSelectedBSI):
 	#This is a placeholder for future internet features
@@ -213,32 +218,33 @@ def Settings():
 				#Display options
 				print("\nWhat do you want to do?")
 				for i in range( len(settingsOptions) ):
-					terminalColor.printBlueString( str(i+1) + ". " + settingsOptions[i] )
-				
+						terminalColor.printBlueString( str(i+1) + ". " + settingsOptions[i] )
+
 				#get user input
 				intDecision = int(input())
 
 				if ( (intDecision < 1) or (intDecision > len(settingsOptions)) ): terminalColor.printRedString("Invalid Input")
-				elif ( settingsOptions[intDecision-1] == "Main Menu"): writeSettings() #Exit settings
+				elif ( settingsOptions[intDecision-1] == "Main Menu"): break
 				elif ( settingsOptions[intDecision-1] == "Change Color Mode"):
-					intDecision = 0
-					if settingsJson.colorMode:
-						print("\nCurrently Color Mode is ON\nDo you want to turn it off?[Yes/No]")
-						userYesNo=str(input())
-						if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = False
-					else:
-						print("\nCurrently Color Mode is OFF\nDo you want to turn it on?[Yes/No]")
-						userYesNo=str(input())
-						if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = True
-				elif ( settingsOptions[intDecision-1] == "Update BSI-Manager"):
-					intDecision = 0   
-					os.system( path.dirname(__file__) + '/BSI-Installer.sh')
-					sys.exit()
+						intDecision = 0
+						if settingsJson.colorMode:
+								print("\nCurrently Color Mode is ON\nDo you want to turn it off?[Yes/No]")
+								userYesNo=str(input())
+								if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = False
+						else:
+								print("\nCurrently Color Mode is OFF\nDo you want to turn it on?[Yes/No]")
+								userYesNo=str(input())
+								if(userYesNo.lower() == "yes") or (userYesNo.lower() == "y"): settingsJson.colorMode = True
+				elif ( settingsOptions[intDecision-1] == "Update Software"):
+						intDecision = 0
+						os.system( path.dirname(__file__) + '/BSI-Installer.sh')
+						sys.exit()
 				elif ( settingsOptions[intDecision-1] == "Developer Options"):
-					intDecision = 0   
-					developerOptions()
+						intDecision = 0
+						developerOptions()
 				else:
-					intDecision = 0    
+						intDecision = 0
+				writeSettings() 
 			except Exception as e:
 				if e == SystemExit: sys.exit()
 				intDecision = 0

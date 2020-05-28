@@ -12,10 +12,10 @@ sudo pip3 install boto3
 
 printf "${LIGHTBLUE}Now creating BSI-Manager bin file${NC}\n"
 text="#!/bin/bash \n\npython3 /usr/lib/BSI-Manager/BSI_Manager.py"
-echo -e "${text}" > BSI_Manager
-sudo chmod +x BSI_Manager
+echo -e "${text}" > BSI_Manager.sh
+sudo chmod +x BSI_Manager.sh
 sudo rm -rf /bin/BSI_Manager
-sudo mv BSI_Manager /bin/BSI_Manager
+sudo mv BSI_Manager.sh /bin/BSI_Manager
 
 printf "${LIGHTBLUE}Cloning latest BSI-Manager files from GitHub${NC}\n"
 cd /usr/lib
