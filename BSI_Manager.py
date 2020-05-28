@@ -132,7 +132,7 @@ def installSelectedBSIs(listOfSelectedBSI):
 
 def BSISelector():
 	#Initializing variables
-	listOfAllBSI = ["System", "Game", "Wine"]
+	listOfAllBSI = ["System", "Game", "Wine", "Office"]
 	listOfCommands = ["Install Selected", "Reset Selection", "Cancel"]
 	if "System" in settingsJson.installedBSIs: listOfSelectedBSI=[]
 	else: listOfSelectedBSI=["System"]
